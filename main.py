@@ -1,5 +1,6 @@
-from request import process_wallet_address
-from utils import save_to_csv,save_to_json,get_empty_data,get_correct_data
+import asyncio
+from request import process_wallet_address_async
+from utils import save_to_csv, save_to_json, get_empty_data, get_correct_data
 
 CHAIN_MAPPING = {
     '1': {'id': 324, 'name': 'ZkSync'},
@@ -7,12 +8,12 @@ CHAIN_MAPPING = {
     '3': {'id': 23448594291968336, 'name': 'Starknet'},
 }
 
-
-def main():
+async def main_async():
     print("-------------------------------------------")
     print("****************Oblakov_0372***************")
     print("Donate (any EVM) 0x5416dac94ef60a4a1b77f90d90dd148af8789b5b")
     print()
+    
     chain_number = input("Select chain:\n1. ZkSync\n2. Linea\n3. Starknet\n")
     chain_id = CHAIN_MAPPING.get(chain_number)
 
@@ -29,20 +30,19 @@ def main():
 
     all_data = []
 
-    for address in wallet_addresses:
-        print(f"Processing data for wallet address: {address}")
+    async with asyncio.Semaphore(10):  
+        tasks = [process_wallet_address_async(address, chain_id['id']) for address in wallet_addresses]
 
-        result = process_wallet_address(address, chain_id['id'])
-        
+        results = await asyncio.gather(*tasks)
+
+    for result, address in zip(results, wallet_addresses):
         if result is not None:
             score_data, interaction_data, batch_data = result
-            all_data.append(get_correct_data(score_data, interaction_data, batch_data,address))
+            all_data.append(get_correct_data(score_data, interaction_data, batch_data, address))
         else:
             all_data.append(get_empty_data(address))
-            
-        
 
-    save_as = input("How to save file? \n1 - Json\n2 - CSV\n")
+    save_as = input("How to save file? \n1 - Json\n2 - CSV\n3 - Both\n")
     if save_as == "1":
         save_to_json(all_data, chain_name)
         print("File saved in current folder")
@@ -57,4 +57,4 @@ def main():
         print("Incorrect format")
 
 if __name__ == '__main__':
-    main()
+    asyncio.run(main_async())
