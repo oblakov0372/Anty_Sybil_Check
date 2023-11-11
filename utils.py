@@ -1,13 +1,18 @@
 import csv
 import json
+import os
 
 def save_to_json(data, chain_name):
-    filename = f'all_data_{chain_name}.json'
+    folder_name = 'Result'
+    os.makedirs(folder_name, exist_ok=True)
+    filename = f'{folder_name}/all_data_{chain_name}.json'
     with open(filename, 'w') as jsonfile:
         json.dump(data, jsonfile, indent=2)
 
 def save_to_csv(data, chain_name):
-    filename = f'all_data_{chain_name}.csv'
+    folder_name = 'Result'
+    os.makedirs(folder_name, exist_ok=True)
+    filename = f'{folder_name}/all_data_{chain_name}.csv'
 
     with open(filename, 'w', newline='') as csvfile:
         fieldnames = [
