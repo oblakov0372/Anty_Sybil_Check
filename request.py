@@ -6,7 +6,7 @@ params = {
 }
 
 headers = {
-    'Authorization': 'TOKEN 567p6clw9uyosk3hn3l4q5pf1yuokyc1',
+    'Authorization': 'TOKEN q10pzip202n6v5cey94ut5t8liem69p1',
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
     'Accept-Language': 'en-US,en;q=0.5',
 }
